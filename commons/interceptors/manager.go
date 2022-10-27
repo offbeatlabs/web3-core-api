@@ -32,7 +32,7 @@ type interceptorManager struct {
 }
 
 // NewInterceptorManager InterceptorManager constructor
-func NewInterceptorManager(logger logger.Logger) *interceptorManager {
+func NewInterceptorManager(logger logger.Logger) InterceptorManager {
 	return &interceptorManager{logger: logger}
 }
 

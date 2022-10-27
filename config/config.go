@@ -1,6 +1,7 @@
 package config
 
 import (
+	commonConfig "github.com/arhamj/offbeat-api/commons/config"
 	"github.com/arhamj/offbeat-api/commons/logger"
 )
 
@@ -12,11 +13,11 @@ type Config struct {
 }
 
 type SqliteConfig struct {
-	Path string `json:"path" validate:"required"`
+	Path string `mapstructure:"path"`
 }
 
 type HelperFlags struct {
-	RunMigrations bool `json:"run_migrations"`
+	RunMigrations bool `mapstructure:"run_migrations"`
 }
 
 type FeatureFlags struct {
@@ -24,7 +25,7 @@ type FeatureFlags struct {
 
 func NewConfig(configFile string) (Config, error) {
 	var cfg Config
-	err := loadConfig(configFile, &cfg)
+	err := commonConfig.LoadConfig(configFile, &cfg)
 	if err != nil {
 		return Config{}, err
 	}

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func loadConfig(configFile string, cfg interface{}) (err error) {
+func LoadConfig(configFile string, cfg interface{}) (err error) {
 	viper.SetConfigFile(configFile)
 	viper.SetConfigType("json")
 	err = viper.ReadInConfig()
@@ -17,7 +17,11 @@ func loadConfig(configFile string, cfg interface{}) (err error) {
 	for _, k := range viper.AllKeys() {
 		value := viper.GetString(k)
 		if strings.HasPrefix(value, "${") && strings.HasSuffix(value, "}") {
-			viper.Set(k, getEnvOrPanic(strings.TrimSuffix(strings.TrimPrefix(value, "${"), "}")))
+			envValue, err := getEnvOrPanic(strings.TrimSuffix(strings.TrimPrefix(value, "${"), "}"))
+			if err != nil {
+				return err
+			}
+			viper.Set(k, envValue)
 		}
 	}
 	err = viper.Unmarshal(cfg)
@@ -27,10 +31,10 @@ func loadConfig(configFile string, cfg interface{}) (err error) {
 	return
 }
 
-func getEnvOrPanic(env string) string {
+func getEnvOrPanic(env string) (string, error) {
 	res := os.Getenv(env)
 	if len(res) == 0 {
-		panic("Missing mandatory env variable: " + env)
+		return "", errors.New("missing mandatory env variable: " + env)
 	}
-	return res
+	return res, nil
 }

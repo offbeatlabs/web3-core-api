@@ -2,22 +2,22 @@ package http_utils
 
 import "net/http"
 
-type responseWriterWrapper struct {
+type ResponseWriterWrapper struct {
 	http.ResponseWriter
 	status      int
 	wroteHeader bool
 }
 
 // NewWriterWrapper response writer wrapper
-func NewWriterWrapper(w http.ResponseWriter) *responseWriterWrapper {
-	return &responseWriterWrapper{ResponseWriter: w}
+func NewWriterWrapper(w http.ResponseWriter) *ResponseWriterWrapper {
+	return &ResponseWriterWrapper{ResponseWriter: w}
 }
 
-func (rw *responseWriterWrapper) Status() int {
+func (rw *ResponseWriterWrapper) Status() int {
 	return rw.status
 }
 
-func (rw *responseWriterWrapper) WriteHeader(code int) {
+func (rw *ResponseWriterWrapper) WriteHeader(code int) {
 	if rw.wroteHeader {
 		return
 	}
