@@ -1,0 +1,10 @@
+{
+  "sqlite_config": {
+    "path": "${SQLITE_DB_PATH}"
+  },
+  "helper_flags": {
+    "run_migrations": "${RUN_MIGRATIONS}"
+  },
+  "feature_flags": {
+  }
+}
