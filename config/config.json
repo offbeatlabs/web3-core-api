@@ -1,9 +1,14 @@
 {
+  "log_config": {
+    "level": "${LOG_LEVEL}",
+    "dev_mode": "${LOG_DEV_MODE_FLAG}",
+    "encoder": "${LOG_ENCODER}"
+  },
   "sqlite_config": {
     "path": "${SQLITE_DB_PATH}"
   },
   "helper_flags": {
-    "run_migrations": "${RUN_MIGRATIONS}"
+    "run_migrations": "${RUN_MIGRATIONS_FLAG}"
   },
   "feature_flags": {
   }

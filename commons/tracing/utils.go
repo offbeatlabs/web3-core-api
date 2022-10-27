@@ -86,7 +86,7 @@ func TextMapCarrierFromKafkaMessageHeaders(headers []kafka.Header) opentracing.T
 	for _, header := range headers {
 		textMap[header.Key] = string(header.Value)
 	}
-	return opentracing.TextMapCarrier(textMap)
+	return textMap
 }
 
 func InjectTextMapCarrier(spanCtx opentracing.SpanContext) (opentracing.TextMapCarrier, error) {

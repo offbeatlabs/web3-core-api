@@ -13,8 +13,8 @@ type Config struct {
 	Host     string `mapstructure:"host"`
 	Port     string `mapstructure:"port"`
 	User     string `mapstructure:"user"`
-	DBName   string `mapstructure:"dbName"`
-	SSLMode  bool   `mapstructure:"sslMode"`
+	DBName   string `mapstructure:"db_name"`
+	SSLMode  bool   `mapstructure:"ssl_mode"`
 	Password string `mapstructure:"password"`
 }
 

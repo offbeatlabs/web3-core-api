@@ -5,9 +5,9 @@ import (
 )
 
 func main() {
-	initDB()
-}
-
-func initDB() {
-
+	a := app{}
+	a.initConfig()
+	a.initLogger()
+	a.initValidator()
+	a.initDB()
 }

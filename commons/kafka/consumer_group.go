@@ -3,6 +3,7 @@ package kafka
 import (
 	"context"
 	"github.com/arhamj/offbeat-api/commons/logger"
+	"github.com/segmentio/kafka-go"
 	"github.com/segmentio/kafka-go/compress"
 	"sync"
 )
@@ -16,9 +17,9 @@ type MessageProcessor interface {
 type Worker func(ctx context.Context, r *kafka.Reader, wg *sync.WaitGroup, workerID int)
 
 type ConsumerGroup interface {
-	ConsumeTopic(ctx context.Context, cancel context.CancelFunc, groupID, topic string, poolSize int, worker Worker)
-	GetNewKafkaReader(kafkaURL []string, topic, groupID string) *kafka.Reader
-	GetNewKafkaWriter(topic string) *kafka.Writer
+	ConsumeTopic(ctx context.Context, groupTopics []string, poolSize int, worker Worker)
+	GetNewKafkaReader(kafkaURL []string, groupTopics []string, groupID string) *kafka.Reader
+	GetNewKafkaWriter() *kafka.Writer
 }
 
 type consumerGroup struct {
@@ -28,7 +29,7 @@ type consumerGroup struct {
 }
 
 // NewConsumerGroup kafka consumer group constructor
-func NewConsumerGroup(brokers []string, groupID string, log logger.Logger) *consumerGroup {
+func NewConsumerGroup(brokers []string, groupID string, log logger.Logger) ConsumerGroup {
 	return &consumerGroup{Brokers: brokers, GroupID: groupID, log: log}
 }
 
