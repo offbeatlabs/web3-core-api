@@ -1,4 +1,4 @@
-package model
+package models
 
 import "time"
 
@@ -15,6 +15,7 @@ type Token struct {
 	UsdPrice        float64
 	UsdMarketCap    float64
 	Usd24HourChange float64
+	TokenPlatforms  []TokenPlatform
 }
 
 type TokenPlatform struct {
