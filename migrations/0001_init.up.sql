@@ -1,16 +1,24 @@
 create table "tokens" (
-    "updated_at" datetime not null,
+	"id" integer primary key,
+	"updated_at" datetime not null,
 	"symbol" varchar not null,
 	"name" varchar not null,
-	"contract_address" varchar not null,
-	"chain" varchar not null,
 	"logo" text,
-	"provider_token_id" varchar not null,
-	"provider" varchar not null,
+	"source_token_id" varchar not null,
+	"source" varchar not null,
 	"usd_price" double,
 	"usd_market_cap" double,
-	"usd_24hour_change" double,
-	primary key ("provider_token_id", "provider")
+	"usd_24h_change" double,
+	"usd_24h_volume" double
 );
 
-create unique index "idx_unique_token_entry" on "tokens" ("contract_address","chain","provider");
+create unique index "idx_uniq_token" on "tokens" ("source","source_token_id");
+create index "idx_symbol" on "tokens" ("symbol");
+
+create table "token_platforms" (
+	"token_id" integer not null,
+	"platform_name" varchar not null,
+	"address" varchar not null
+);
+
+create unique index "idx_uniq" on "token_platforms" ("address","platform_name");
