@@ -23,8 +23,14 @@ type CoingeckoTokenDetailResp struct {
 		Small string `json:"small"`
 		Large string `json:"large"`
 	} `json:"image"`
-	DetailPlatforms map[string]struct {
-		DecimalPlace    interface{} `json:"decimal_place"`
-		ContractAddress string      `json:"contract_address"`
-	} `json:"detail_platforms"`
+	DetailPlatforms map[string]PlatformDetail `json:"detail_platforms"`
+}
+
+type PlatformDetail struct {
+	DecimalPlace    interface{} `json:"decimal_place"`
+	ContractAddress string      `json:"contract_address"`
+}
+
+func (p PlatformDetail) GetDecimalPlace() int64 {
+	return int64(p.DecimalPlace.(float64))
 }
