@@ -49,5 +49,5 @@ func (a *app) initDB() {
 			a.logger.Fatal("running db migrations failed: ", err)
 		}
 	}
-	a.logger.Info("successfully run migrations")
+	a.logger.Info("successfully ran migrations")
 }
