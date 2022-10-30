@@ -38,15 +38,15 @@ func (r TokenRepo) UpdateDetails(id int64, token models.Token) error {
 	panic("implement me!")
 }
 
-func (r TokenRepo) UpdatePriceData(id int64, token models.Token) error {
+func (r TokenRepo) UpdatePriceDetails(id int64, token models.Token) error {
 	panic("implement me!")
 }
 
-func (r TokenRepo) GetById(id int64) (*models.Token, error) {
+func (r TokenRepo) GetById(id int64) (models.Token, error) {
 	panic("implement me!")
 }
 
-func (r TokenRepo) GetBySourceTokenId(source, tokenId string) (*models.Token, error) {
+func (r TokenRepo) GetBySourceTokenId(source, tokenId string) (models.Token, error) {
 	panic("implement me!")
 }
 
