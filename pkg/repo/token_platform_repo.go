@@ -16,8 +16,8 @@ type TokenPlatformRepo struct {
 	db     *sql.DB
 }
 
-func NewTokenPlatformRepo(logger *logger.AppLogger, db *sql.DB) *TokenRepo {
-	return &TokenRepo{
+func NewTokenPlatformRepo(logger *logger.AppLogger, db *sql.DB) TokenRepo {
+	return TokenRepo{
 		logger: logger,
 		db:     db,
 	}

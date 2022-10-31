@@ -13,8 +13,8 @@ type TokenService struct {
 }
 
 func NewTokenService(logger *logger.AppLogger, tokenRepo *repo.TokenRepo,
-	tokenPlatformRepo *repo.TokenPlatformRepo) *TokenService {
-	return &TokenService{
+	tokenPlatformRepo *repo.TokenPlatformRepo) TokenService {
+	return TokenService{
 		logger:            logger,
 		tokenRepo:         tokenRepo,
 		tokenPlatformRepo: tokenPlatformRepo,
