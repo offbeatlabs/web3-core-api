@@ -10,4 +10,9 @@ func main() {
 	a.initLogger()
 	a.initValidator()
 	a.initDB()
+	a.initRepo()
+	a.initExternal()
+	a.initService()
+	a.initTasks()
+	a.initServer()
 }
