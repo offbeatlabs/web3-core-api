@@ -27,22 +27,14 @@ func NewTokenRepo(logger *logger.AppLogger, db *sql.DB) TokenRepo {
 }
 
 func (r TokenRepo) Create(token models.Token) error {
-	panic("implement me!")
-}
-
-func (r TokenRepo) MultiCreate(token models.Token) error {
-	panic("implement me!")
-}
-
-func (r TokenRepo) UpdateDetails(id int64, token models.Token) error {
+	err := token.PreCreate()
+	if err != nil {
+		return err
+	}
 	panic("implement me!")
 }
 
 func (r TokenRepo) UpdatePriceDetails(id int64, token models.Token) error {
-	panic("implement me!")
-}
-
-func (r TokenRepo) GetById(id int64) (models.Token, error) {
 	panic("implement me!")
 }
 
