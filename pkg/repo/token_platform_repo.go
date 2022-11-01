@@ -30,7 +30,3 @@ func (r TokenPlatformRepo) Create(platformInfo models.TokenPlatform) error {
 func (r TokenPlatformRepo) MultiCreate(platformInfo []models.TokenPlatform) error {
 	panic("implement me!")
 }
-
-func (r TokenPlatformRepo) GetByTokenId(tokenId int64) ([]models.TokenPlatform, error) {
-	panic("implement me!")
-}

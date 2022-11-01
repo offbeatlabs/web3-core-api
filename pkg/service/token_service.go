@@ -27,15 +27,6 @@ func (s TokenService) Create(token models.Token) error {
 		s.logger.Error("failed to insert token in db", token, err)
 		return err
 	}
-	return nil
-}
-
-func (s TokenService) UpdateTokenDetails(tokenId int64, token models.Token) error {
-	err := s.tokenRepo.UpdateDetails(tokenId, token)
-	if err != nil {
-		s.logger.Error("error when updating token details", token, err)
-		return err
-	}
 	if len(token.TokenPlatforms) > 0 {
 		err = s.tokenPlatformRepo.MultiCreate(token.TokenPlatforms)
 		if err != nil {
