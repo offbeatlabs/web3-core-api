@@ -18,4 +18,5 @@ offbeat-api
 
 .idea/
 db/*
+.DS_STORE
 

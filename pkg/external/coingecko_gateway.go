@@ -35,7 +35,7 @@ func (c CoingeckoGateway) GetTokenList() (*CoingeckoTokenListResp, error) {
 		return nil, err
 	}
 	if resp.IsError() {
-		c.logger.Error("Error fetching token list from coingecko")
+		c.logger.Errorf("Error fetching token list from coingecko %s", resp.Status())
 		return nil, httpErrors.InternalServerError
 	}
 	return resp.Result().(*CoingeckoTokenListResp), err
@@ -56,7 +56,7 @@ func (c CoingeckoGateway) GetTokenPrice(tokenIds []string) (*CoingeckoTokenPrice
 		return nil, err
 	}
 	if resp.IsError() {
-		c.logger.Error("Error fetching token prices from coingecko", tokenIds)
+		c.logger.Errorf("Error fetching token prices from coingecko %s", resp.Status())
 		return nil, httpErrors.InternalServerError
 	}
 	return resp.Result().(*CoingeckoTokenPricesResp), err
@@ -77,7 +77,7 @@ func (c CoingeckoGateway) GetTokenDetails(tokenId string) (*CoingeckoTokenDetail
 		return nil, err
 	}
 	if resp.IsError() {
-		c.logger.Error("Error fetching token details from coingecko", tokenId)
+		c.logger.Errorf("Error fetching token details from coingecko %s %s", tokenId, resp.Status())
 		return nil, httpErrors.InternalServerError
 	}
 	return resp.Result().(*CoingeckoTokenDetailResp), err

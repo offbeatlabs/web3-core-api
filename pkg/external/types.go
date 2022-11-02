@@ -32,5 +32,8 @@ type PlatformDetail struct {
 }
 
 func (p PlatformDetail) GetDecimalPlace() int64 {
+	if p.DecimalPlace == nil {
+		return 0
+	}
 	return int64(p.DecimalPlace.(float64))
 }

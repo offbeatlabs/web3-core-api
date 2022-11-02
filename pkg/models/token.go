@@ -18,6 +18,7 @@ type Token struct {
 	UsdPrice        float64
 	UsdMarketCap    float64
 	Usd24HourChange float64
+	Usd24HourVolume float64
 	TokenPlatforms  []TokenPlatform
 }
 
