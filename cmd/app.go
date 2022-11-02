@@ -69,11 +69,13 @@ func (a *app) initDB() {
 			a.logger.Fatal("running db migrations failed: ", err)
 		}
 	}
+	a.db = sqliteDb
 	a.logger.Info("successfully ran migrations")
 }
 
 func (a *app) initRepo() {
 	a.tokenRepo = repo.NewTokenRepo(a.logger, a.db)
+	a.tokenPlatformRepo = repo.NewTokenPlatformRepo(a.logger, a.db)
 	a.logger.Info("successfully initialised repos")
 }
 
@@ -92,13 +94,17 @@ func (a *app) initTasks() {
 	tokenPriceTask := tasks.NewTokenPriceTask(a.logger, a.coingeckoExternal, a.tokenService)
 
 	a.scheduler = gocron.NewScheduler(time.UTC)
-	_, err := a.scheduler.Every(1).Day().Do(tokenListTask.Execute)
-	if err != nil {
-		a.logger.Fatal("failed to register token list task: ", err)
+	if a.config.FeatureFlags.EnableTokenSync {
+		_, err := a.scheduler.Every(1).Days().Do(tokenListTask.Execute)
+		if err != nil {
+			a.logger.Fatal("failed to register token list task: ", err)
+		}
 	}
-	_, err = a.scheduler.Every(5).Minute().Do(tokenPriceTask.Execute)
-	if err != nil {
-		a.logger.Fatal("failed to register token price task: ", err)
+	if a.config.FeatureFlags.EnablePriceSync {
+		_, err := a.scheduler.Every(5).Minutes().Do(tokenPriceTask.Execute)
+		if err != nil {
+			a.logger.Fatal("failed to register token price task: ", err)
+		}
 	}
 	a.logger.Info("successfully initialised background tasks")
 	a.scheduler.StartAsync()
