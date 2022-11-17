@@ -32,6 +32,12 @@ func (t *Token) PreCreate() error {
 	return nil
 }
 
+func (t *Token) Parse() {
+	if len(t.Logo) > 0 {
+		_ = json.Unmarshal([]byte(t.Logo), &t.ParsedLogo)
+	}
+}
+
 func (t *Token) SetSqlRow(row *sql.Row) error {
 	return row.Scan(&t.Id, &t.UpdatedAt, &t.Symbol, &t.Name, &t.Logo, &t.SourceTokenId, &t.Source,
 		&t.UsdPrice, &t.UsdMarketCap, &t.Usd24HourChange, &t.Usd24HourVolume)

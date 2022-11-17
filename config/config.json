@@ -12,7 +12,6 @@
   },
   "feature_flags": {
     "enable_token_sync": "${ENABLE_TOKEN_SYNC_FLAG}",
-    "enable_price_sync": "${ENABLE_PRICE_SYNC_FLAG}",
-    "enable_http_err_debug": "${ENABLE_HTTP_ERR_DEBUG}"
+    "enable_price_sync": "${ENABLE_PRICE_SYNC_FLAG}"
   }
 }

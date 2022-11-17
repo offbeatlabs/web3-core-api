@@ -14,5 +14,6 @@ func main() {
 	a.initExternal()
 	a.initService()
 	a.initTasks()
+	a.initControllers()
 	a.initServer()
 }

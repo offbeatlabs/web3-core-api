@@ -11,6 +11,7 @@ import (
 const (
 	InsertTokenPlatformQuery = `INSERT INTO "token_platforms" ("token_id", "platform_name", "address", "decimal")
 								VALUES (?, ?, ?, ?)`
+	GetTokenPlatformsByTokenId        = `SELECT token_id, platform_name, address, decimal FROM token_platforms WHERE token_id = ?`
 	GetTokenPlatformByAddress         = `SELECT token_id, platform_name, address, decimal FROM token_platforms WHERE address = ?`
 	GetTokenPlatformByPlatformDetails = `SELECT token_id, platform_name, address, decimal FROM token_platforms WHERE address = ? AND platform_name = ?`
 )
@@ -95,6 +96,23 @@ func (r TokenPlatformRepo) GetByAddress(address string) (models.TokenPlatform, e
 	err := res.SetSqlRow(row)
 	if err != nil {
 		return models.TokenPlatform{}, err
+	}
+	return res, nil
+}
+
+func (r TokenPlatformRepo) GetByTokenId(tokenId int64) ([]models.TokenPlatform, error) {
+	rows, err := r.db.Query(GetTokenPlatformsByTokenId, tokenId)
+	if err != nil {
+		return nil, err
+	}
+	var res []models.TokenPlatform
+	for rows.Next() {
+		var t models.TokenPlatform
+		err = rows.Scan(&t.TokenId, &t.PlatformName, &t.Address, &t.Decimal)
+		res = append(res, t)
+	}
+	if err = rows.Err(); err != nil {
+		return res, err
 	}
 	return res, nil
 }
