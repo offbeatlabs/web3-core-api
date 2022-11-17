@@ -62,3 +62,27 @@ func (s TokenService) GetToken(source, sourceTokenId string) (models.Token, erro
 	}
 	return token, nil
 }
+
+func (s TokenService) GetTokenDetailsByAddress(contractAddress string) (models.Token, error) {
+	tokenPlatform, err := s.tokenPlatformRepo.GetByAddress(contractAddress)
+	if err != nil {
+		return models.Token{}, err
+	}
+	token, err := s.tokenRepo.GetByTokenId(tokenPlatform.TokenId)
+	if err != nil {
+		return models.Token{}, err
+	}
+	return token, err
+}
+
+func (s TokenService) GetTokenDetails(platform, contractAddress string) (models.Token, error) {
+	tokenPlatform, err := s.tokenPlatformRepo.GetByPlatformNameAndAddress(platform, contractAddress)
+	if err != nil {
+		return models.Token{}, err
+	}
+	token, err := s.tokenRepo.GetByTokenId(tokenPlatform.TokenId)
+	if err != nil {
+		return models.Token{}, err
+	}
+	return token, err
+}

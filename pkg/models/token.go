@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"encoding/json"
 	"time"
 )
@@ -31,6 +32,11 @@ func (t *Token) PreCreate() error {
 	return nil
 }
 
+func (t *Token) SetSqlRow(row *sql.Row) error {
+	return row.Scan(&t.Id, &t.UpdatedAt, &t.Symbol, &t.Name, &t.Logo, &t.SourceTokenId, &t.Source,
+		&t.UsdPrice, &t.UsdMarketCap, &t.Usd24HourChange, &t.Usd24HourVolume)
+}
+
 type Logo struct {
 	Thumb string `json:"thumb"`
 	Small string `json:"small"`
@@ -42,4 +48,8 @@ type TokenPlatform struct {
 	PlatformName string
 	Address      string
 	Decimal      int64
+}
+
+func (t *TokenPlatform) SetSqlRow(row *sql.Row) error {
+	return row.Scan(&t.TokenId, &t.PlatformName, &t.Address, &t.Decimal)
 }

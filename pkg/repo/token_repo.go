@@ -18,6 +18,10 @@ const (
        						"usd_market_cap", "usd_24h_change", "usd_24h_volume"
 							FROM  "tokens" WHERE "source" = ? AND "source_token_id" = ?`
 
+	GetTokenByInfo = `SELECT "id", "updated_at", "symbol", "name", "logo", "source_token_id", "source", "usd_price", 
+       						"usd_market_cap", "usd_24h_change", "usd_24h_volume"
+							FROM  "tokens" WHERE "id" = ?`
+
 	GetAllTokensQuery = `SELECT "id", "updated_at", "symbol", "name", "logo", "source_token_id", "source", "usd_price", 
 						"usd_market_cap", "usd_24h_change", "usd_24h_volume" FROM  "tokens"`
 )
@@ -68,8 +72,20 @@ func (r TokenRepo) GetBySourceTokenId(source, tokenId string) (models.Token, err
 		return models.Token{}, row.Err()
 	}
 	var res models.Token
-	err := row.Scan(&res.Id, &res.UpdatedAt, &res.Symbol, &res.Name, &res.Logo, &res.SourceTokenId, &res.Source,
-		&res.UsdPrice, &res.UsdMarketCap, &res.Usd24HourChange, &res.Usd24HourVolume)
+	err := res.SetSqlRow(row)
+	if err != nil {
+		return models.Token{}, err
+	}
+	return res, nil
+}
+
+func (r TokenRepo) GetByTokenId(tokenId int64) (models.Token, error) {
+	row := r.db.QueryRow(GetTokenByInfo, tokenId)
+	if row.Err() != nil {
+		return models.Token{}, row.Err()
+	}
+	var res models.Token
+	err := res.SetSqlRow(row)
 	if err != nil {
 		return models.Token{}, err
 	}
