@@ -11,6 +11,8 @@ import (
 const (
 	InsertTokenPlatformQuery = `INSERT INTO "token_platforms" ("token_id", "platform_name", "address", "decimal")
 								VALUES (?, ?, ?, ?)`
+	GetTokenPlatformByAddress         = `SELECT token_id, platform_name, address, decimal FROM token_platforms WHERE address = ?`
+	GetTokenPlatformByPlatformDetails = `SELECT token_id, platform_name, address, decimal FROM token_platforms WHERE address = ? AND platform_name = ?`
 )
 
 type TokenPlatformRepo struct {
@@ -67,4 +69,32 @@ func (r TokenPlatformRepo) MultiCreate(tokenId int64, platformInfo []models.Toke
 		_ = tx.Rollback()
 	}
 	return nil
+}
+
+func (r TokenPlatformRepo) GetByPlatformNameAndAddress(platformName, address string) (models.TokenPlatform, error) {
+	address = strings.ToLower(address)
+	row := r.db.QueryRow(GetTokenPlatformByPlatformDetails, address, platformName)
+	if row.Err() != nil {
+		return models.TokenPlatform{}, row.Err()
+	}
+	var res models.TokenPlatform
+	err := res.SetSqlRow(row)
+	if err != nil {
+		return models.TokenPlatform{}, err
+	}
+	return res, nil
+}
+
+func (r TokenPlatformRepo) GetByAddress(address string) (models.TokenPlatform, error) {
+	address = strings.ToLower(address)
+	row := r.db.QueryRow(GetTokenPlatformByAddress, address)
+	if row.Err() != nil {
+		return models.TokenPlatform{}, row.Err()
+	}
+	var res models.TokenPlatform
+	err := res.SetSqlRow(row)
+	if err != nil {
+		return models.TokenPlatform{}, err
+	}
+	return res, nil
 }
