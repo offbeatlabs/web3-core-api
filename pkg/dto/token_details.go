@@ -20,6 +20,7 @@ type TokenPlatform struct {
 }
 
 func NewTokenDetails(token models.Token) TokenDetails {
+	token.Parse()
 	t := TokenDetails{}
 	t.Symbol = token.Symbol
 	t.Name = token.Name

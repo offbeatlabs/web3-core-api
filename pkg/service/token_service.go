@@ -86,3 +86,11 @@ func (s TokenService) GetTokenByPlatformDetails(platform, contractAddress string
 	}
 	return token, err
 }
+
+func (s TokenService) GetTokenPlatformsByTokenId(tokenId int64) ([]models.TokenPlatform, error) {
+	tokenPlatforms, err := s.tokenPlatformRepo.GetByTokenId(tokenId)
+	if err != nil {
+		return []models.TokenPlatform{}, err
+	}
+	return tokenPlatforms, nil
+}
