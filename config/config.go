@@ -21,8 +21,9 @@ type HelperFlags struct {
 }
 
 type FeatureFlags struct {
-	EnableTokenSync bool `mapstructure:"enable_token_sync"`
-	EnablePriceSync bool `mapstructure:"enable_price_sync"`
+	EnableTokenSync    bool `mapstructure:"enable_token_sync"`
+	EnablePriceSync    bool `mapstructure:"enable_price_sync"`
+	EnableHttpErrDebug bool `mapstructure:"enable_http_err_debug"`
 }
 
 func NewConfig(configFile string) (Config, error) {
