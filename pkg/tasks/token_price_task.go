@@ -1,7 +1,7 @@
 package tasks
 
 import (
-	"github.com/arhamj/offbeat-api/commons/logger"
+	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/arhamj/offbeat-api/pkg/external"
 	"github.com/arhamj/offbeat-api/pkg/models"
 	"github.com/arhamj/offbeat-api/pkg/service"

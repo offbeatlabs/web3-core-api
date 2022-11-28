@@ -1,8 +1,8 @@
 package config
 
 import (
-	commonConfig "github.com/arhamj/offbeat-api/commons/config"
-	"github.com/arhamj/offbeat-api/commons/logger"
+	commonConfig "github.com/arhamj/go-commons/pkg/config"
+	"github.com/arhamj/go-commons/pkg/logger"
 )
 
 type Config struct {

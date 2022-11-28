@@ -3,7 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
-	"github.com/arhamj/offbeat-api/commons/logger"
+	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/arhamj/offbeat-api/pkg/models"
 	"strings"
 )
