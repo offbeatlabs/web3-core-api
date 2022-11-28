@@ -2,8 +2,8 @@ package main
 
 import (
 	"database/sql"
-	httpClient "github.com/arhamj/offbeat-api/commons/http_client"
-	"github.com/arhamj/offbeat-api/commons/logger"
+	httpClient "github.com/arhamj/go-commons/pkg/http_client"
+	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/arhamj/offbeat-api/config"
 	"github.com/arhamj/offbeat-api/pkg/controller"
 	"github.com/arhamj/offbeat-api/pkg/db"

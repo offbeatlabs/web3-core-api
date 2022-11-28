@@ -1,8 +1,8 @@
 package controller
 
 import (
-	httpErrors "github.com/arhamj/offbeat-api/commons/http_errors"
-	"github.com/arhamj/offbeat-api/commons/logger"
+	httpErrors "github.com/arhamj/go-commons/pkg/http_errors"
+	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/arhamj/offbeat-api/pkg/dto"
 	"github.com/arhamj/offbeat-api/pkg/models"
 	"github.com/arhamj/offbeat-api/pkg/service"

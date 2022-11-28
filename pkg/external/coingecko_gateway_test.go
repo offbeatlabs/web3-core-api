@@ -1,8 +1,8 @@
 package external
 
 import (
-	httpClient "github.com/arhamj/offbeat-api/commons/http_client"
-	"github.com/arhamj/offbeat-api/commons/logger"
+	httpClient "github.com/arhamj/go-commons/pkg/http_client"
+	"github.com/arhamj/go-commons/pkg/logger"
 	"testing"
 )
 

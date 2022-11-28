@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/arhamj/offbeat-api/commons/logger"
+	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/labstack/echo/v4"
 	"time"
 )
