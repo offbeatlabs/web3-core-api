@@ -5,7 +5,7 @@
 *.dll
 *.so
 *.dylib
-offbeat-api
+web3-core-api
 
 # Test binary, built with `go test -c`
 *.test

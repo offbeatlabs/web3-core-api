@@ -2,9 +2,9 @@ package tasks
 
 import (
 	"github.com/arhamj/go-commons/pkg/logger"
-	"github.com/arhamj/offbeat-api/pkg/external"
-	"github.com/arhamj/offbeat-api/pkg/models"
-	"github.com/arhamj/offbeat-api/pkg/service"
+	"github.com/offbeatlabs/web3-core-api/pkg/external"
+	"github.com/offbeatlabs/web3-core-api/pkg/models"
+	"github.com/offbeatlabs/web3-core-api/pkg/service"
 	"time"
 )
 

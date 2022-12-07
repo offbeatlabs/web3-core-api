@@ -1,4 +1,4 @@
-module github.com/arhamj/offbeat-api
+module github.com/offbeatlabs/web3-core-api
 
 go 1.19
 
