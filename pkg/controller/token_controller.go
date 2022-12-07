@@ -3,10 +3,10 @@ package controller
 import (
 	httpErrors "github.com/arhamj/go-commons/pkg/http_errors"
 	"github.com/arhamj/go-commons/pkg/logger"
-	"github.com/arhamj/offbeat-api/pkg/dto"
-	"github.com/arhamj/offbeat-api/pkg/models"
-	"github.com/arhamj/offbeat-api/pkg/service"
 	"github.com/labstack/echo/v4"
+	"github.com/offbeatlabs/web3-core-api/pkg/dto"
+	"github.com/offbeatlabs/web3-core-api/pkg/models"
+	"github.com/offbeatlabs/web3-core-api/pkg/service"
 	"net/http"
 	"strings"
 )

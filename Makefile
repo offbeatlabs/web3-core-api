@@ -4,7 +4,7 @@ bindata:
 
 .PHONY: build
 build:
-	CGO_ENABLED=0 GOOS=linux go build -o offbeat-api ./cmd
+	CGO_ENABLED=0 GOOS=linux go build -o web3-core-api ./cmd
 
 .PHONY: test
 test:

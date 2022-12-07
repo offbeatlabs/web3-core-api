@@ -3,11 +3,11 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"github.com/arhamj/offbeat-api/migrations"
 	"github.com/golang-migrate/migrate"
 	"github.com/golang-migrate/migrate/database/sqlite3"
 	bindata "github.com/golang-migrate/migrate/source/go_bindata"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/offbeatlabs/web3-core-api/migrations"
 	"github.com/pkg/errors"
 )
 

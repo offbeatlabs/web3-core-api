@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/arhamj/go-commons/pkg/logger"
-	"github.com/arhamj/offbeat-api/pkg/models"
-	"github.com/arhamj/offbeat-api/pkg/repo"
+	"github.com/offbeatlabs/web3-core-api/pkg/models"
+	"github.com/offbeatlabs/web3-core-api/pkg/repo"
 )
 
 type TokenService struct {

@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/arhamj/offbeat-api/pkg/models"
+import "github.com/offbeatlabs/web3-core-api/pkg/models"
 
 type TokenDetails struct {
 	Symbol          string          `json:"symbol"`
