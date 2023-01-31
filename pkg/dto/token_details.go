@@ -19,6 +19,12 @@ type TokenPlatform struct {
 	Decimal      int64  `json:"decimal"`
 }
 
+type MultiTokenDetails struct {
+	Results       map[string]TokenDetails `json:"results"`
+	FoundCount    int                     `json:"found_count"`
+	NotFoundCount int                     `json:"not_found_count"`
+}
+
 func NewTokenDetails(token models.Token) TokenDetails {
 	token.Parse()
 	t := TokenDetails{}
@@ -35,6 +41,19 @@ func NewTokenDetails(token models.Token) TokenDetails {
 		}
 	}
 	return t
+}
+
+func NewMultiTokenDetails(tokenMap map[string]models.Token, requestedAddresses int) MultiTokenDetails {
+	detailsMap := make(map[string]TokenDetails, 0)
+	for address, token := range tokenMap {
+		detailsMap[address] = NewTokenDetails(token)
+	}
+	resp := MultiTokenDetails{
+		Results:       detailsMap,
+		FoundCount:    len(tokenMap),
+		NotFoundCount: requestedAddresses - len(tokenMap),
+	}
+	return resp
 }
 
 func newTokenPlatform(tokenPlatform models.TokenPlatform) TokenPlatform {

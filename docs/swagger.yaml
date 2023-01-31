@@ -1,0 +1,147 @@
+definitions:
+  dto.MultiTokenDetails:
+    properties:
+      found_count:
+        type: integer
+      not_found_count:
+        type: integer
+      results:
+        additionalProperties:
+          $ref: '#/definitions/dto.TokenDetails'
+        type: object
+    type: object
+  dto.RestError:
+    properties:
+      error:
+        type: string
+      message: {}
+      timestamp:
+        type: string
+    type: object
+  dto.TokenDetails:
+    properties:
+      logo:
+        $ref: '#/definitions/models.Logo'
+      name:
+        type: string
+      symbol:
+        type: string
+      token_platform:
+        items:
+          $ref: '#/definitions/dto.TokenPlatform'
+        type: array
+      usd_24_hour_change:
+        type: number
+      usd_24_hour_volume:
+        type: number
+      usd_market_cap:
+        type: number
+      usd_price:
+        type: number
+    type: object
+  dto.TokenPlatform:
+    properties:
+      address:
+        type: string
+      decimal:
+        type: integer
+      platform_name:
+        type: string
+    type: object
+  models.Logo:
+    properties:
+      large:
+        type: string
+      small:
+        type: string
+      thumb:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/tokens:
+    get:
+      consumes:
+      - application/json
+      description: Fetch the token details by address with optional platform param
+      parameters:
+      - description: API key of the client
+        in: header
+        name: api-key
+        required: true
+        type: string
+      - description: Token address
+        in: query
+        name: address
+        required: true
+        type: string
+      - description: Platform
+        in: query
+        name: platform
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TokenDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.RestError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.RestError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.RestError'
+      summary: Get token details
+      tags:
+      - token
+  /v1/tokens/multi:
+    get:
+      consumes:
+      - application/json
+      description: Fetch multiple token details with optional platform param
+      parameters:
+      - description: API key of the client
+        in: header
+        name: api-key
+        required: true
+        type: string
+      - description: Comma separated addresses
+        in: query
+        name: address
+        required: true
+        type: string
+      - description: Platform
+        in: query
+        name: platform
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MultiTokenDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.RestError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.RestError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.RestError'
+      summary: Multi get token details
+      tags:
+      - token
+swagger: "2.0"

@@ -1,14 +1,15 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	httpClient "github.com/arhamj/go-commons/pkg/http_client"
-	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/go-co-op/gocron"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	defaultMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/offbeatlabs/web3-core-api/config"
+	"github.com/offbeatlabs/web3-core-api/docs"
 	"github.com/offbeatlabs/web3-core-api/pkg/controller"
 	"github.com/offbeatlabs/web3-core-api/pkg/db"
 	"github.com/offbeatlabs/web3-core-api/pkg/external"
@@ -16,13 +17,14 @@ import (
 	"github.com/offbeatlabs/web3-core-api/pkg/repo"
 	"github.com/offbeatlabs/web3-core-api/pkg/service"
 	"github.com/offbeatlabs/web3-core-api/pkg/tasks"
-	"log"
+	"github.com/offbeatlabs/web3-core-api/pkg/util"
+	log "github.com/sirupsen/logrus"
+	echoSwagger "github.com/swaggo/echo-swagger"
 	"net/http"
 	"time"
 )
 
 type app struct {
-	logger    *logger.AppLogger
 	validator *validator.Validate
 
 	config config.Config
@@ -39,6 +41,8 @@ type app struct {
 	tokenService service.TokenService
 
 	tokenController controller.TokenController
+
+	echoServer *echo.Echo
 }
 
 func (a *app) initConfig() {
@@ -49,12 +53,6 @@ func (a *app) initConfig() {
 	a.config = cfg
 }
 
-func (a *app) initLogger() {
-	a.logger = logger.NewAppLogger(&a.config.LogConfig)
-	a.logger.InitLogger()
-	a.logger.Info("successfully initialised logger")
-}
-
 func (a *app) initValidator() {
 	a.validator = validator.New()
 }
@@ -62,72 +60,111 @@ func (a *app) initValidator() {
 func (a *app) initDB() {
 	sqliteDb, err := db.NewDB(a.config.SqliteConfig.Path)
 	if err != nil {
-		a.logger.Fatal("init db failed: ", err)
+		log.Fatal("init db failed: ", err)
 	}
-	a.logger.Info("successfully initialised sqlite database")
+	log.Info("successfully initialised sqlite database")
 
 	if a.config.HelperFlags.RunMigrations {
 		err = db.RunMigrationScripts(sqliteDb)
 		if err != nil {
-			a.logger.Fatal("running db migrations failed: ", err)
+			log.Fatal("running db migrations failed: ", err)
 		}
 	}
 	a.db = sqliteDb
-	a.logger.Info("successfully ran migrations")
+	log.Info("successfully ran migrations")
 }
 
 func (a *app) initRepo() {
-	a.tokenRepo = repo.NewTokenRepo(a.logger, a.db)
-	a.tokenPlatformRepo = repo.NewTokenPlatformRepo(a.logger, a.db)
-	a.logger.Info("successfully initialised repos")
+	a.tokenRepo = repo.NewTokenRepo(a.db)
+	a.tokenPlatformRepo = repo.NewTokenPlatformRepo(a.db)
+	log.Info("successfully initialised repos")
 }
 
 func (a *app) initExternal() {
-	a.coingeckoExternal = external.NewCoingeckoGateway(a.logger, httpClient.NewHttpClient(false))
-	a.logger.Info("successfully initialised external gateways")
+	a.coingeckoExternal = external.NewCoingeckoGateway(httpClient.NewHttpClient(false))
+	log.Info("successfully initialised external gateways")
 }
 
 func (a *app) initService() {
-	a.tokenService = service.NewTokenService(a.logger, &a.tokenRepo, &a.tokenPlatformRepo)
-	a.logger.Info("successfully initialised services")
+	a.tokenService = service.NewTokenService(&a.tokenRepo, &a.tokenPlatformRepo)
+	log.Info("successfully initialised services")
 }
 
 func (a *app) initTasks() {
-	tokenListTask := tasks.NewTokenListTask(a.logger, a.coingeckoExternal, a.tokenService)
-	tokenPriceTask := tasks.NewTokenPriceTask(a.logger, a.coingeckoExternal, a.tokenService)
+	tokenListTask := tasks.NewTokenListTask(a.coingeckoExternal, a.tokenService)
+	tokenPriceTask := tasks.NewTokenPriceTask(a.coingeckoExternal, a.tokenService)
 
 	a.scheduler = gocron.NewScheduler(time.UTC)
 	if a.config.FeatureFlags.EnableTokenSync {
 		_, err := a.scheduler.Every(1).Days().Do(tokenListTask.Execute)
 		if err != nil {
-			a.logger.Fatal("failed to register token list task: ", err)
+			log.Fatal("failed to register token list task: ", err)
 		}
 	}
 	if a.config.FeatureFlags.EnablePriceSync {
 		_, err := a.scheduler.Every(5).Minutes().Do(tokenPriceTask.Execute)
 		if err != nil {
-			a.logger.Fatal("failed to register token price task: ", err)
+			log.Fatal("failed to register token price task: ", err)
 		}
 	}
-	a.logger.Info("successfully initialised background tasks")
+	log.Info("successfully initialised background tasks")
 	a.scheduler.StartAsync()
 }
 
 func (a *app) initControllers() {
-	a.tokenController = controller.NewTokenController(a.logger, a.tokenService)
+	a.tokenController = controller.NewTokenController(a.tokenService)
 }
 
 func (a *app) initServer() {
 	e := echo.New()
-	e.Use(middleware.LoggingMiddleware(a.logger))
+	e.HideBanner = true
+	e.Validator = util.NewRequestValidation(a.validator)
+	e.Use(middleware.LoggingMiddleware())
 	e.Use(defaultMiddleware.Recover())
+	e.Use(defaultMiddleware.CORS())
 
 	// Register routes
-	e.GET("/ping", func(c echo.Context) error {
+	e.GET("/v1/token", a.tokenController.GetTokenDetails)
+	e.GET("/v1/token/multi", a.tokenController.MultiGetTokenDetails)
+
+	a.echoServer = e
+
+	a.registerAdminRoutes()
+
+	log.Info("starting app server...")
+	log.Fatal(e.Start(":1324"))
+}
+
+func (a *app) registerAdminRoutes() {
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Title = "Offbeat Web3 Token details and price API"
+	docs.SwaggerInfo.Description = "API documentation"
+	docs.SwaggerInfo.Host = a.config.ServerConfig.BaseUrlForSwagger
+
+	// Register routes
+	a.echoServer.GET("/admin/swagger/*", echoSwagger.WrapHandler)
+	a.echoServer.GET("/admin/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{
 			"result": "pong",
 		})
 	})
-	e.GET("/v1/token", a.tokenController.GetTokenDetails)
-	a.logger.Fatal(e.Start(":1323"))
+	a.echoServer.GET("/admin/metrics", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]string{
+			"result": "pong",
+		})
+	})
+}
+
+func (a *app) shutdown(ctx context.Context) error {
+	err := a.db.Close()
+	if err != nil {
+		return err
+	}
+
+	err = a.echoServer.Shutdown(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

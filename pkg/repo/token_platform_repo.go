@@ -3,8 +3,8 @@ package repo
 import (
 	"context"
 	"database/sql"
-	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/offbeatlabs/web3-core-api/pkg/models"
+	log "github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -17,14 +17,12 @@ const (
 )
 
 type TokenPlatformRepo struct {
-	logger *logger.AppLogger
-	db     *sql.DB
+	db *sql.DB
 }
 
-func NewTokenPlatformRepo(logger *logger.AppLogger, db *sql.DB) TokenPlatformRepo {
+func NewTokenPlatformRepo(db *sql.DB) TokenPlatformRepo {
 	return TokenPlatformRepo{
-		logger: logger,
-		db:     db,
+		db: db,
 	}
 }
 
@@ -61,7 +59,7 @@ func (r TokenPlatformRepo) MultiCreate(tokenId int64, platformInfo []models.Toke
 		platform.TokenId = tokenId
 		err = r.CreateTx(tx, platform)
 		if err != nil {
-			r.logger.Errorf("error inserting platform info %v %v", platform, err)
+			log.Errorf("error inserting platform info %v %v", platform, err)
 			return err
 		}
 	}

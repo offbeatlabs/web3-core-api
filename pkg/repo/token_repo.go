@@ -2,7 +2,6 @@ package repo
 
 import (
 	"database/sql"
-	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/offbeatlabs/web3-core-api/pkg/models"
 )
 
@@ -27,14 +26,12 @@ const (
 )
 
 type TokenRepo struct {
-	logger *logger.AppLogger
-	db     *sql.DB
+	db *sql.DB
 }
 
-func NewTokenRepo(logger *logger.AppLogger, db *sql.DB) TokenRepo {
+func NewTokenRepo(db *sql.DB) TokenRepo {
 	return TokenRepo{
-		logger: logger,
-		db:     db,
+		db: db,
 	}
 }
 

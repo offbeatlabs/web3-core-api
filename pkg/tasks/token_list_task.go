@@ -1,54 +1,46 @@
 package tasks
 
 import (
-	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/offbeatlabs/web3-core-api/pkg/external"
 	"github.com/offbeatlabs/web3-core-api/pkg/models"
 	"github.com/offbeatlabs/web3-core-api/pkg/service"
+	log "github.com/sirupsen/logrus"
 	"strings"
 	"time"
 )
 
 type TokenListTask struct {
-	logger           *logger.AppLogger
 	coingeckoGateway external.CoingeckoGateway
 	tokenService     service.TokenService
 }
 
-func NewTokenListTask(logger *logger.AppLogger, coingeckoGateway external.CoingeckoGateway,
-	tokenService service.TokenService) TokenListTask {
+func NewTokenListTask(coingeckoGateway external.CoingeckoGateway, tokenService service.TokenService) TokenListTask {
 	return TokenListTask{
-		logger:           logger,
 		coingeckoGateway: coingeckoGateway,
 		tokenService:     tokenService,
 	}
 }
 
 func (t TokenListTask) Execute() {
-	t.logger.Info("executing token list task")
+	log.Info("executing token list task")
 	tokenList, err := t.coingeckoGateway.GetTokenList()
 	if err != nil {
-		t.logger.Errorf("failed to fetch token list from coingecko %v", err)
+		log.Errorf("failed to fetch token list from coingecko %v", err)
 		return
 	}
-	t.logger.Infof("total number of tokens fetched from coingecko %d", len(*tokenList))
+	log.Infof("total number of tokens fetched from coingecko %d", len(*tokenList))
 	for i := 0; i < len(*tokenList); {
 		coingeckoToken := (*tokenList)[i]
 
-		// todo: remove the debug whitelist
-		//if !(coingeckoToken.Id == "unmarshal" || coingeckoToken.Id == "dydx" || coingeckoToken.Id == "ethereum") {
-		//	i++
-		//	continue
-		//}
 		fetchedToken, err := t.tokenService.GetToken("coingecko", coingeckoToken.Id)
 		if err == nil && fetchedToken.SourceTokenId == coingeckoToken.Id {
-			t.logger.Debugf("token already present in db %s %s", "coingecko", coingeckoToken.Id)
+			log.Debugf("token already present in db %s %s", "coingecko", coingeckoToken.Id)
 			i++
 			continue
 		}
 		coingeckoTokenDetails, err := t.coingeckoGateway.GetTokenDetails(coingeckoToken.Id)
 		if err != nil {
-			t.logger.Errorf("failed to fetch token details from coingecko %s %v", coingeckoToken.Id, err)
+			log.Errorf("failed to fetch token details from coingecko %s %v", coingeckoToken.Id, err)
 			return
 		}
 
@@ -56,14 +48,17 @@ func (t TokenListTask) Execute() {
 
 		err = t.tokenService.Create(tokenModel)
 		if err != nil {
-			t.logger.Errorf("failed to save token model to db %v %v", tokenModel, err)
+			log.Errorf("failed to save token model to db %v %v", tokenModel, err)
 			// loop variable is incremented as db error is assumed to reoccur
 		}
-		t.logger.Debugf("successfully created token in db %s", tokenModel.Name)
-		time.Sleep(2 * time.Second)
+		log.Debugf("successfully created token in db %s", tokenModel.Name)
+		time.Sleep(5 * time.Second)
 		i++
+		if i%100 == 0 {
+			log.Info("Successfully saved 100 tokens i:", i)
+		}
 	}
-	t.logger.Info("token list task execution complete")
+	log.Info("token list task execution complete")
 }
 
 func (t TokenListTask) toTokenModel(coingeckoToken external.CoingeckoToken, coingeckoTokenDetails *external.CoingeckoTokenDetailResp) models.Token {

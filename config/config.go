@@ -2,14 +2,13 @@ package config
 
 import (
 	commonConfig "github.com/arhamj/go-commons/pkg/config"
-	"github.com/arhamj/go-commons/pkg/logger"
 )
 
 type Config struct {
-	LogConfig    logger.Config `mapstructure:"log_config"`
-	SqliteConfig SqliteConfig  `mapstructure:"sqlite_config"`
-	HelperFlags  HelperFlags   `mapstructure:"helper_flags"`
-	FeatureFlags FeatureFlags  `mapstructure:"feature_flags"`
+	SqliteConfig SqliteConfig `mapstructure:"sqlite_config"`
+	HelperFlags  HelperFlags  `mapstructure:"helper_flags"`
+	ServerConfig ServerConfig `mapstructure:"server_config"`
+	FeatureFlags FeatureFlags `mapstructure:"feature_flags"`
 }
 
 type SqliteConfig struct {
@@ -23,6 +22,10 @@ type HelperFlags struct {
 type FeatureFlags struct {
 	EnableTokenSync bool `mapstructure:"enable_token_sync"`
 	EnablePriceSync bool `mapstructure:"enable_price_sync"`
+}
+
+type ServerConfig struct {
+	BaseUrlForSwagger string `mapstructure:"base_url_for_swagger"`
 }
 
 func NewConfig(configFile string) (Config, error) {

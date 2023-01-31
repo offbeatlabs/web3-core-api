@@ -1,21 +1,14 @@
 # Web3 core APIs
 
-A backend monolith for core web3 APIs like,
+Backend that supports token details and price syncing from multiple sources. The application exposes APIs with the
+following capabilities:
 
 1. Token details
-2. Token price
-3. Protocol level data
+2. Token live price (synced every 5 minutes)
 
-## Capabilities
+## Supported sources
 
-* Sync price and token details from coingecko in SQLite
-* Protocol level APIs
-
-## Protocols supported
-
-* Ethereum (TBA)
-    * Uniswap v2
-    * Uniswap v3
+- Coingecko
 
 ## Migrations
 
@@ -33,7 +26,7 @@ Build binary for linux
 make build
 ```
 
-App runs on port `1323`
+App runs on port `1324`
 
 ## API
 
@@ -43,7 +36,7 @@ App runs on port `1323`
 
 ```curl
 curl --request GET \
-  --url '<base_url>:1323/v1/token?address=0xb9ef770b6a5e12e45983c5d80545258aa38f3b78&platform=ethereum'
+  --url '<base_url>:1324/v1/token?address=0xb9ef770b6a5e12e45983c5d80545258aa38f3b78&platform=ethereum'
 ```
 
 - Response
