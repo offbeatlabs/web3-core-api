@@ -14,3 +14,12 @@ test:
 test-report:
 	go test -v -coverpkg=./pkg/... -coverprofile=cover.out ./pkg/...
 	go tool cover -html=cover.out -o cover.html
+
+.PHONY: swag
+swag:
+	swag fmt -g **/**/*.go
+	swag init -g **/**/*.go
+
+.PHONY: swag-fmt
+swag-fmt:
+	swag fmt -g **/**/*.go

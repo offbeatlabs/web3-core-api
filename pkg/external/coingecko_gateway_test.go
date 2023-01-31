@@ -72,7 +72,7 @@ func TestCoingeckoGateway_GetTokenPrice(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			lgr := logger.NewAppLogger(logger.NewLoggerConfig("debug", true, "console"))
 			lgr.InitLogger()
-			c := NewCoingeckoGateway(lgr, httpClient.NewHttpClient(true))
+			c := NewCoingeckoGateway(httpClient.NewHttpClient(true))
 			got, err := c.GetTokenPrice(tt.args.tokenIds)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetTokenPrice() error = %v, wantErr %v", err, tt.wantErr)
@@ -134,7 +134,7 @@ func TestCoingeckoGateway_GetTokenDetails(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			lgr := logger.NewAppLogger(logger.NewLoggerConfig("debug", true, "console"))
 			lgr.InitLogger()
-			c := NewCoingeckoGateway(lgr, httpClient.NewHttpClient(true))
+			c := NewCoingeckoGateway(httpClient.NewHttpClient(true))
 			got, err := c.GetTokenDetails(tt.args.tokenId)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetTokenDetails() error = %v, wantErr %v", err, tt.wantErr)

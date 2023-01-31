@@ -2,8 +2,8 @@ package external
 
 import (
 	httpErrors "github.com/arhamj/go-commons/pkg/http_errors"
-	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/go-resty/resty/v2"
+	log "github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -16,13 +16,11 @@ const (
 )
 
 type CoingeckoGateway struct {
-	logger     *logger.AppLogger
 	httpClient *resty.Client
 }
 
-func NewCoingeckoGateway(logger *logger.AppLogger, httpClient *resty.Client) CoingeckoGateway {
+func NewCoingeckoGateway(httpClient *resty.Client) CoingeckoGateway {
 	return CoingeckoGateway{
-		logger:     logger,
 		httpClient: httpClient,
 	}
 }
@@ -35,7 +33,7 @@ func (c CoingeckoGateway) GetTokenList() (*CoingeckoTokenListResp, error) {
 		return nil, err
 	}
 	if resp.IsError() {
-		c.logger.Errorf("Error fetching token list from coingecko %s", resp.Status())
+		log.Errorf("Error fetching token list from coingecko %s", resp.Status())
 		return nil, httpErrors.InternalServerError
 	}
 	return resp.Result().(*CoingeckoTokenListResp), err
@@ -56,7 +54,7 @@ func (c CoingeckoGateway) GetTokenPrice(tokenIds []string) (*CoingeckoTokenPrice
 		return nil, err
 	}
 	if resp.IsError() {
-		c.logger.Errorf("Error fetching token prices from coingecko %s", resp.Status())
+		log.Errorf("Error fetching token prices from coingecko %s", resp.Status())
 		return nil, httpErrors.InternalServerError
 	}
 	return resp.Result().(*CoingeckoTokenPricesResp), err
@@ -77,7 +75,7 @@ func (c CoingeckoGateway) GetTokenDetails(tokenId string) (*CoingeckoTokenDetail
 		return nil, err
 	}
 	if resp.IsError() {
-		c.logger.Errorf("Error fetching token details from coingecko %s %s", tokenId, resp.Status())
+		log.Errorf("Error fetching token details from coingecko %s %s", tokenId, resp.Status())
 		return nil, httpErrors.InternalServerError
 	}
 	return resp.Result().(*CoingeckoTokenDetailResp), err

@@ -1,21 +1,18 @@
 package service
 
 import (
-	"github.com/arhamj/go-commons/pkg/logger"
 	"github.com/offbeatlabs/web3-core-api/pkg/models"
 	"github.com/offbeatlabs/web3-core-api/pkg/repo"
+	log "github.com/sirupsen/logrus"
 )
 
 type TokenService struct {
-	logger            *logger.AppLogger
 	tokenRepo         *repo.TokenRepo
 	tokenPlatformRepo *repo.TokenPlatformRepo
 }
 
-func NewTokenService(logger *logger.AppLogger, tokenRepo *repo.TokenRepo,
-	tokenPlatformRepo *repo.TokenPlatformRepo) TokenService {
+func NewTokenService(tokenRepo *repo.TokenRepo, tokenPlatformRepo *repo.TokenPlatformRepo) TokenService {
 	return TokenService{
-		logger:            logger,
 		tokenRepo:         tokenRepo,
 		tokenPlatformRepo: tokenPlatformRepo,
 	}
@@ -24,13 +21,13 @@ func NewTokenService(logger *logger.AppLogger, tokenRepo *repo.TokenRepo,
 func (s TokenService) Create(token models.Token) error {
 	insertId, err := s.tokenRepo.Create(token)
 	if err != nil {
-		s.logger.Errorf("failed to insert token in db %s %v", token.SourceTokenId, err)
+		log.Errorf("failed to insert token in db %s %v", token.SourceTokenId, err)
 		return err
 	}
 	if len(token.TokenPlatforms) > 0 {
 		err = s.tokenPlatformRepo.MultiCreate(insertId, token.TokenPlatforms)
 		if err != nil {
-			s.logger.Err("failed to insert token platforms in db", err)
+			log.Error("failed to insert token platforms in db", err)
 			return err
 		}
 	}
@@ -40,7 +37,7 @@ func (s TokenService) Create(token models.Token) error {
 func (s TokenService) UpdatePriceDetails(tokenId int64, token models.Token) error {
 	err := s.tokenRepo.UpdatePriceDetails(tokenId, token)
 	if err != nil {
-		s.logger.Errorf("error when updating token price details %s %v", token.SourceTokenId, err)
+		log.Errorf("error when updating token price details %s %v", token.SourceTokenId, err)
 		return err
 	}
 	return nil
@@ -49,7 +46,7 @@ func (s TokenService) UpdatePriceDetails(tokenId int64, token models.Token) erro
 func (s TokenService) GetAllTokens() ([]models.Token, error) {
 	tokens, err := s.tokenRepo.GetAll()
 	if err != nil {
-		s.logger.Err("error when getting all tokens", err)
+		log.Error("error when getting all tokens", err)
 		return nil, err
 	}
 	return tokens, nil
