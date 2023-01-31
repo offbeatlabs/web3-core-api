@@ -10,6 +10,7 @@ RUN make build
 # Runner
 FROM alpine:3.17.0
 ARG APP_NAME=web3-core-api
+COPY --from=builder /src/config/config.json ./config/config.json
 COPY --from=builder /src/web3-core-api ./web3-core-api
 
 CMD ["./web3-core-api"]
