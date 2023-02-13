@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  web3-core-api:
+    privileged: true
+    env_file:
+      - local.env
+    build:
+      context: .
+    restart: on-failure
+    ports:
+      - "9090:9090"
+      - "9091:9091"
+    volumes:
+      - ./volume/:/db/
