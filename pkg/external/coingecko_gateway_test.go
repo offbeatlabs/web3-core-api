@@ -20,7 +20,7 @@ func TestCoingeckoGateway_GetTokenList(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			lgr := logger.NewAppLogger(logger.NewLoggerConfig("debug", true, "console"))
 			lgr.InitLogger()
-			c := NewCoingeckoGateway(lgr, httpClient.NewHttpClient(true))
+			c := NewCoingeckoGateway(httpClient.NewHttpClient(true))
 			got, err := c.GetTokenList()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetTokenList() error = %v, wantErr %v", err, tt.wantErr)
