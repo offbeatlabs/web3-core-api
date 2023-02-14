@@ -53,11 +53,6 @@ func (t TokenController) GetTokenDetails(ctx echo.Context) error {
 	if err != nil {
 		return httpErrors.ErrorCtxResponse(ctx, err, false)
 	}
-	tokenPlatforms, err := t.tokenService.GetTokenPlatformsByTokenId(token.Id)
-	if err != nil {
-		return httpErrors.ErrorCtxResponse(ctx, err, false)
-	}
-	token.TokenPlatforms = tokenPlatforms
 	res := dto.NewTokenDetails(token)
 	return ctx.JSON(http.StatusOK, res)
 }
@@ -95,11 +90,6 @@ func (t TokenController) MultiGetTokenDetails(ctx echo.Context) error {
 	if err != nil {
 		return httpErrors.ErrorCtxResponse(ctx, err, false)
 	}
-	tokenPlatforms, err := t.tokenService.GetTokenPlatformsByTokenId(token.Id)
-	if err != nil {
-		return httpErrors.ErrorCtxResponse(ctx, err, false)
-	}
-	token.TokenPlatforms = tokenPlatforms
 	res := dto.NewMultiTokenDetails(map[string]models.Token{address: token}, 1)
 	return ctx.JSON(http.StatusOK, res)
 }

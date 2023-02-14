@@ -2,17 +2,14 @@ package config
 
 import (
 	commonConfig "github.com/arhamj/go-commons/pkg/config"
+	"github.com/offbeatlabs/web3-core-api/pkg/db"
 )
 
 type Config struct {
-	SqliteConfig SqliteConfig `mapstructure:"sqlite_config"`
-	HelperFlags  HelperFlags  `mapstructure:"helper_flags"`
-	ServerConfig ServerConfig `mapstructure:"server_config"`
-	FeatureFlags FeatureFlags `mapstructure:"feature_flags"`
-}
-
-type SqliteConfig struct {
-	Path string `mapstructure:"path"`
+	SqliteConfig db.SqliteConfig `mapstructure:"sqlite_config"`
+	HelperFlags  HelperFlags     `mapstructure:"helper_flags"`
+	ServerConfig ServerConfig    `mapstructure:"server_config"`
+	FeatureFlags FeatureFlags    `mapstructure:"feature_flags"`
 }
 
 type HelperFlags struct {

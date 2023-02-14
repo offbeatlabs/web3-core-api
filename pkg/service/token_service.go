@@ -19,22 +19,15 @@ func NewTokenService(tokenRepo *repo.TokenRepo, tokenPlatformRepo *repo.TokenPla
 }
 
 func (s TokenService) Create(token models.Token) error {
-	insertId, err := s.tokenRepo.Create(token)
+	err := s.tokenRepo.Create(token)
 	if err != nil {
 		log.Errorf("failed to insert token in db %s %v", token.SourceTokenId, err)
 		return err
 	}
-	if len(token.TokenPlatforms) > 0 {
-		err = s.tokenPlatformRepo.MultiCreate(insertId, token.TokenPlatforms)
-		if err != nil {
-			log.Error("failed to insert token platforms in db", err)
-			return err
-		}
-	}
 	return nil
 }
 
-func (s TokenService) UpdatePriceDetails(tokenId int64, token models.Token) error {
+func (s TokenService) UpdatePriceDetails(tokenId uint, token models.Token) error {
 	err := s.tokenRepo.UpdatePriceDetails(tokenId, token)
 	if err != nil {
 		log.Errorf("error when updating token price details %s %v", token.SourceTokenId, err)
@@ -65,7 +58,7 @@ func (s TokenService) GetTokenByAddress(contractAddress string) (models.Token, e
 	if err != nil {
 		return models.Token{}, err
 	}
-	token, err := s.tokenRepo.GetByTokenId(tokenPlatform.TokenId)
+	token, err := s.tokenRepo.GetByTokenId(tokenPlatform.TokenID)
 	if err != nil {
 		return models.Token{}, err
 	}
@@ -77,17 +70,9 @@ func (s TokenService) GetTokenByPlatformDetails(platform, contractAddress string
 	if err != nil {
 		return models.Token{}, err
 	}
-	token, err := s.tokenRepo.GetByTokenId(tokenPlatform.TokenId)
+	token, err := s.tokenRepo.GetByTokenId(tokenPlatform.TokenID)
 	if err != nil {
 		return models.Token{}, err
 	}
 	return token, err
-}
-
-func (s TokenService) GetTokenPlatformsByTokenId(tokenId int64) ([]models.TokenPlatform, error) {
-	tokenPlatforms, err := s.tokenPlatformRepo.GetByTokenId(tokenId)
-	if err != nil {
-		return []models.TokenPlatform{}, err
-	}
-	return tokenPlatforms, nil
 }
