@@ -23,3 +23,7 @@ swag:
 .PHONY: swag-fmt
 swag-fmt:
 	swag fmt -g **/**/*.go
+
+.PHONY: dev-config-update
+dev-config-update:
+	aws s3 cp web3-core-api.env s3://offbeat-application-config/web3-core-api.env
