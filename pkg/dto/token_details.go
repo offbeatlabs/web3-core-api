@@ -26,11 +26,10 @@ type MultiTokenDetails struct {
 }
 
 func NewTokenDetails(token models.Token) TokenDetails {
-	token.Parse()
 	t := TokenDetails{}
 	t.Symbol = token.Symbol
 	t.Name = token.Name
-	t.Logo = token.ParsedLogo
+	t.Logo = token.Logo.Data
 	t.UsdPrice = token.UsdPrice
 	t.UsdMarketCap = token.UsdMarketCap
 	t.Usd24HourVolume = token.Usd24HourVolume

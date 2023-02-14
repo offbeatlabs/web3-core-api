@@ -36,14 +36,14 @@ func (t TokenPriceTask) Execute() {
 	for _, token := range tokens {
 		coingeckoPriceDetail, ok := aggregateTokenPriceMap[token.SourceTokenId]
 		if !ok {
-			log.Debug("price details not found for token ", token.Id)
+			log.Debug("price details not found for token ", token.ID)
 			continue
 		}
 		token.UsdPrice = coingeckoPriceDetail.Usd
 		token.UsdMarketCap = coingeckoPriceDetail.UsdMarketCap
 		token.Usd24HourChange = coingeckoPriceDetail.Usd24HChange
 		token.Usd24HourVolume = coingeckoPriceDetail.Usd24HVol
-		err = t.tokenService.UpdatePriceDetails(token.Id, token)
+		err = t.tokenService.UpdatePriceDetails(token.ID, token)
 		if err != nil {
 			log.Errorf("failed to update price details for token %s %v", token.SourceTokenId, err)
 		}

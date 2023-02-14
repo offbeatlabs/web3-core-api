@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	httpClient "github.com/arhamj/go-commons/pkg/http_client"
 	"github.com/go-co-op/gocron"
 	"github.com/go-playground/validator"
@@ -14,12 +13,14 @@ import (
 	"github.com/offbeatlabs/web3-core-api/pkg/db"
 	"github.com/offbeatlabs/web3-core-api/pkg/external"
 	"github.com/offbeatlabs/web3-core-api/pkg/middleware"
+	"github.com/offbeatlabs/web3-core-api/pkg/models"
 	"github.com/offbeatlabs/web3-core-api/pkg/repo"
 	"github.com/offbeatlabs/web3-core-api/pkg/service"
 	"github.com/offbeatlabs/web3-core-api/pkg/tasks"
 	"github.com/offbeatlabs/web3-core-api/pkg/util"
 	log "github.com/sirupsen/logrus"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"gorm.io/gorm"
 	"net/http"
 	"time"
 )
@@ -29,7 +30,7 @@ type app struct {
 
 	config config.Config
 
-	db *sql.DB
+	db *gorm.DB
 
 	scheduler *gocron.Scheduler
 
@@ -58,17 +59,18 @@ func (a *app) initValidator() {
 }
 
 func (a *app) initDB() {
-	sqliteDb, err := db.NewDB(a.config.SqliteConfig.Path)
+	sqliteDb, err := db.NewSqliteDB(a.config.SqliteConfig)
 	if err != nil {
 		log.Fatal("init db failed: ", err)
 	}
 	log.Info("successfully initialised sqlite database")
 
 	if a.config.HelperFlags.RunMigrations {
-		err = db.RunMigrationScripts(sqliteDb)
+		err = sqliteDb.AutoMigrate(&models.Token{}, &models.TokenPlatform{})
 		if err != nil {
-			log.Fatal("running db migrations failed: ", err)
+			log.WithField("err", err).Fatal("running db migrations for sqlite db failed")
 		}
+		log.Info("successfully ran migrations")
 	}
 	a.db = sqliteDb
 	log.Info("successfully ran migrations")
@@ -156,10 +158,11 @@ func (a *app) registerAdminRoutes() {
 }
 
 func (a *app) shutdown(ctx context.Context) error {
-	err := a.db.Close()
+	sqlDb, err := a.db.DB()
 	if err != nil {
 		return err
 	}
+	_ = sqlDb.Close()
 
 	err = a.echoServer.Shutdown(ctx)
 	if err != nil {

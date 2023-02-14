@@ -5,6 +5,7 @@ import (
 	"github.com/offbeatlabs/web3-core-api/pkg/models"
 	"github.com/offbeatlabs/web3-core-api/pkg/service"
 	log "github.com/sirupsen/logrus"
+	"gorm.io/datatypes"
 	"strings"
 	"time"
 )
@@ -63,14 +64,13 @@ func (t TokenListTask) Execute() {
 
 func (t TokenListTask) toTokenModel(coingeckoToken external.CoingeckoToken, coingeckoTokenDetails *external.CoingeckoTokenDetailResp) models.Token {
 	tokenModel := models.Token{
-		UpdatedAt: time.Now().UTC(),
-		Symbol:    coingeckoToken.Symbol,
-		Name:      coingeckoToken.Name,
-		ParsedLogo: models.Logo{
+		Symbol: coingeckoToken.Symbol,
+		Name:   coingeckoToken.Name,
+		Logo: datatypes.JSONType[models.Logo]{Data: models.Logo{
 			Thumb: coingeckoTokenDetails.Image.Thumb,
 			Small: coingeckoTokenDetails.Image.Small,
 			Large: coingeckoTokenDetails.Image.Large,
-		},
+		}},
 		SourceTokenId:  coingeckoToken.Id,
 		Source:         "coingecko",
 		TokenPlatforms: []models.TokenPlatform{},
