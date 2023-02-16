@@ -16,7 +16,7 @@ func NewTokenRepo(db *gorm.DB) TokenRepo {
 	}
 }
 
-func (r TokenRepo) Create(token models.Token) error {
+func (r TokenRepo) Create(token *models.Token) error {
 	res := r.db.Create(token)
 	if err := res.Error; err != nil {
 		return err

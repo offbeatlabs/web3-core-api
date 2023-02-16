@@ -47,7 +47,7 @@ func (t TokenListTask) Execute() {
 
 		tokenModel := t.toTokenModel(coingeckoToken, coingeckoTokenDetails)
 
-		err = t.tokenService.Create(tokenModel)
+		err = t.tokenService.Create(&tokenModel)
 		if err != nil {
 			log.Errorf("failed to save token model to db %v %v", tokenModel, err)
 			// loop variable is incremented as db error is assumed to reoccur
@@ -55,7 +55,7 @@ func (t TokenListTask) Execute() {
 		log.Debugf("successfully created token in db %s", tokenModel.Name)
 		time.Sleep(5 * time.Second)
 		i++
-		if i%100 == 0 {
+		if i%10 == 0 {
 			log.Info("Successfully saved 100 tokens i:", i)
 		}
 	}
