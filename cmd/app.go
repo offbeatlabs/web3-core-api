@@ -59,20 +59,37 @@ func (a *app) initValidator() {
 }
 
 func (a *app) initDB() {
-	sqliteDb, err := db.NewSqliteDB(a.config.SqliteConfig)
-	if err != nil {
-		log.Fatal("init db failed: ", err)
-	}
-	log.Info("successfully initialised sqlite database")
-
-	if a.config.HelperFlags.RunMigrations {
-		err = sqliteDb.AutoMigrate(&models.Token{}, &models.TokenPlatform{})
+	if a.config.FeatureFlags.UseSqlite {
+		sqliteDb, err := db.NewSqliteDB(a.config.SqliteConfig)
 		if err != nil {
-			log.WithField("err", err).Fatal("running db migrations for sqlite db failed")
+			log.Fatal("init sqlite db failed: ", err)
 		}
-		log.Info("successfully ran migrations")
+		log.Info("successfully initialised sqlite database")
+
+		if a.config.HelperFlags.RunMigrations {
+			err = sqliteDb.AutoMigrate(&models.Token{}, &models.TokenPlatform{})
+			if err != nil {
+				log.WithField("err", err).Fatal("running db migrations for sqlite db failed")
+			}
+			log.Info("successfully ran migrations")
+		}
+		a.db = sqliteDb
+	} else {
+		postgresDb, err := db.NewPostgresDB(a.config.PostgresConfig)
+		if err != nil {
+			log.Fatal("init postgres db failed: ", err)
+		}
+		log.Info("successfully initialised postgres database")
+
+		if a.config.HelperFlags.RunMigrations {
+			err = postgresDb.AutoMigrate(&models.Token{}, &models.TokenPlatform{})
+			if err != nil {
+				log.WithField("err", err).Fatal("running db migrations for postgres db failed")
+			}
+			log.Info("successfully ran migrations")
+		}
+		a.db = postgresDb
 	}
-	a.db = sqliteDb
 	log.Info("successfully ran migrations")
 }
 

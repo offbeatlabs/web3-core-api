@@ -51,7 +51,7 @@ func (r TokenRepo) GetBySourceTokenId(source, tokenId string) (models.Token, err
 	return res, nil
 }
 
-func (r TokenRepo) GetByTokenId(tokenId int64) (models.Token, error) {
+func (r TokenRepo) GetByTokenId(tokenId uint) (models.Token, error) {
 	var res models.Token
 	err := r.db.Where("id = ?", tokenId).First(&res).Error
 	if err != nil {

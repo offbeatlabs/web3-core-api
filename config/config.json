@@ -2,10 +2,17 @@
   "sqlite_config": {
     "path": "${SQLITE_DB_PATH}"
   },
+  "postgres_config": {
+    "connection_string": "${DATA_POSTGRES_CONN_STRING}",
+    "max_idle_connections": 2,
+    "max_open_connections": 5,
+    "log_level": 2
+  },
   "helper_flags": {
     "run_migrations": "${RUN_MIGRATIONS_FLAG}"
   },
   "feature_flags": {
+    "use_sqlite": "${USE_SQLITE}",
     "enable_token_sync": "${ENABLE_TOKEN_SYNC_FLAG}",
     "enable_price_sync": "${ENABLE_PRICE_SYNC_FLAG}"
   },
