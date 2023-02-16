@@ -81,7 +81,7 @@ func (t TokenListTask) toTokenModel(coingeckoToken external.CoingeckoToken, coin
 		}
 		tokenModel.TokenPlatforms = append(tokenModel.TokenPlatforms, models.TokenPlatform{
 			PlatformName: platform,
-			Address:      detail.ContractAddress,
+			Address:      strings.ToLower(detail.ContractAddress),
 			Decimal:      detail.GetDecimalPlace(),
 		})
 	}
