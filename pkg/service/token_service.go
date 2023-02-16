@@ -18,7 +18,7 @@ func NewTokenService(tokenRepo *repo.TokenRepo, tokenPlatformRepo *repo.TokenPla
 	}
 }
 
-func (s TokenService) Create(token models.Token) error {
+func (s TokenService) Create(token *models.Token) error {
 	err := s.tokenRepo.Create(token)
 	if err != nil {
 		log.Errorf("failed to insert token in db %s %v", token.SourceTokenId, err)
