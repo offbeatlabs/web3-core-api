@@ -15,13 +15,13 @@ type Token struct {
 	UsdMarketCap    float64
 	Usd24HourChange float64
 	Usd24HourVolume float64
-	TokenPlatforms  []TokenPlatform
+	TokenPlatforms  []TokenPlatform `gorm:"-"`
 }
 
 type TokenPlatform struct {
-	TokenID      int64
-	PlatformName string
-	Address      string
+	TokenID      uint
+	PlatformName string `gorm:"index:idx_uniq,unique"`
+	Address      string `gorm:"index:idx_uniq,unique"`
 	Decimal      int64
 }
 

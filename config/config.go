@@ -6,10 +6,11 @@ import (
 )
 
 type Config struct {
-	SqliteConfig db.SqliteConfig `mapstructure:"sqlite_config"`
-	HelperFlags  HelperFlags     `mapstructure:"helper_flags"`
-	ServerConfig ServerConfig    `mapstructure:"server_config"`
-	FeatureFlags FeatureFlags    `mapstructure:"feature_flags"`
+	SqliteConfig   db.SqliteConfig   `mapstructure:"sqlite_config"`
+	PostgresConfig db.PostgresConfig `mapstructure:"postgres_config"`
+	HelperFlags    HelperFlags       `mapstructure:"helper_flags"`
+	ServerConfig   ServerConfig      `mapstructure:"server_config"`
+	FeatureFlags   FeatureFlags      `mapstructure:"feature_flags"`
 }
 
 type HelperFlags struct {
@@ -17,6 +18,7 @@ type HelperFlags struct {
 }
 
 type FeatureFlags struct {
+	UseSqlite       bool `mapstructure:"use_sqlite"`
 	EnableTokenSync bool `mapstructure:"enable_token_sync"`
 	EnablePriceSync bool `mapstructure:"enable_price_sync"`
 }

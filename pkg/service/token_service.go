@@ -24,6 +24,16 @@ func (s TokenService) Create(token *models.Token) error {
 		log.Errorf("failed to insert token in db %s %v", token.SourceTokenId, err)
 		return err
 	}
+	if len(token.TokenPlatforms) > 0 {
+		for i := range token.TokenPlatforms {
+			token.TokenPlatforms[i].TokenID = token.ID
+		}
+		err := s.tokenPlatformRepo.Create(token.TokenPlatforms)
+		if err != nil {
+			log.Errorf("failed to insert token platforms in db %s %v", token.SourceTokenId, err)
+			return err
+		}
+	}
 	return nil
 }
 

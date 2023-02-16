@@ -17,6 +17,14 @@ func NewTokenPlatformRepo(db *gorm.DB) TokenPlatformRepo {
 	}
 }
 
+func (r TokenPlatformRepo) Create(tokenPlatforms []models.TokenPlatform) error {
+	res := r.db.CreateInBatches(tokenPlatforms, 5)
+	if err := res.Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r TokenPlatformRepo) GetByPlatformNameAndAddress(platform string, address string) (models.TokenPlatform, error) {
 	var res models.TokenPlatform
 	address = strings.ToLower(address)

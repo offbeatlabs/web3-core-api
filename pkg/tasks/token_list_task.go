@@ -56,7 +56,7 @@ func (t TokenListTask) Execute() {
 		time.Sleep(5 * time.Second)
 		i++
 		if i%10 == 0 {
-			log.Info("Successfully saved 100 tokens i:", i)
+			log.Info("Successfully saved 10 tokens i:", i)
 		}
 	}
 	log.Info("token list task execution complete")
