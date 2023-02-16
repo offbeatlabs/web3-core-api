@@ -126,8 +126,8 @@ func (a *app) initServer() {
 	e.Use(defaultMiddleware.CORS())
 
 	// Register routes
-	e.GET("/v1/token", a.tokenController.GetTokenDetails)
-	e.GET("/v1/token/multi", a.tokenController.MultiGetTokenDetails)
+	e.GET("/v1/tokens", a.tokenController.GetTokenDetails)
+	e.GET("/v1/tokens/multi", a.tokenController.MultiGetTokenDetails)
 
 	a.echoServer = e
 

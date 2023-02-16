@@ -45,7 +45,7 @@ func (r TokenRepo) GetBySourceTokenId(source, tokenId string) (models.Token, err
 			"err":             err,
 			"source":          source,
 			"source_token_id": tokenId,
-		}).Error("GetBySourceTokenId: error finding token by source details")
+		}).Debug("GetBySourceTokenId: error finding token by source details")
 		return models.Token{}, err
 	}
 	return res, nil
