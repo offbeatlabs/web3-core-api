@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@8.2.1
+  aws-ecs: circleci/aws-ecs@3.2.0
+
+workflows:
+  # Log into AWS, build and push image to Amazon ECR.
+  build_and_push_image:
+    jobs:
+      - aws-ecr/build-and-push-image:
+          filters:
+            branches:
+              only: main
+          registry-id: AWS_ECR_REGISTRY_ID
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          create-repo: true
+          dockerfile: Dockerfile
+          region: '$AWS_DEFAULT_REGION'
+          repo: 'web3-core-api'
+          tag: '$CIRCLE_SHA1'
+      - aws-ecs/deploy-service-update:
+          filters:
+            branches:
+              only: main
+          requires:
+            - aws-ecr/build-and-push-image
+          aws-region: AWS_DEFAULT_REGION
+          family: 'web3-core-api-service'
+          cluster: 'offbeat-dev'
+          container-image-name-updates: 'container=web3-core-api-service,tag=${CIRCLE_SHA1}'
