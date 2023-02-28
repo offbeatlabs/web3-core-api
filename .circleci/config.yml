@@ -18,7 +18,7 @@ workflows:
           create-repo: true
           dockerfile: Dockerfile
           region: '$AWS_DEFAULT_REGION'
-          repo: 'web3-core-api'
+          repo: 'web3-core-dev'
           tag: '$CIRCLE_SHA1'
       - aws-ecs/deploy-service-update:
           filters:
